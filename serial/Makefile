@@ -1,6 +1,7 @@
 TARGET=serial
 MCU=atmega328p
 SOURCES=main.c
+SOURCES+=uart_hal.c
 
 PROGRAMMER=arduino
 PORT=-P/dev/tty.usbmodem213301
