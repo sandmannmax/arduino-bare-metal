@@ -1,5 +1,24 @@
+TARGET=led
+MCU=atmega328p
+SOURCES=main.c
+SOURCES+=led.c
+
+PROGRAMMER=arduino
+PORT=-P/dev/tty.usbmodem213301
+BAUD=-b115200
+
+OBJECTS=$(SOURCES:.c=.o)
+CFLAGS=-c -Os -DF_CPU=16000000UL
+LDFLAGS=
+
 default:
-	avr-gcc -Os -DF_CPU=16000000UL -mmcu=atmega328p -c -o led.o led.c
-	avr-gcc -o led.bin led.o
-	avr-objcopy -O ihex -R .eeprom led.bin led.hex
-	avrdude -F -V -c arduino -p ATMEGA328P -P /dev/tty.usbmodem213301 -b 115200 -U flash:w:led.hex
+	avr-gcc $(CFLAGS) -mmcu=$(MCU) $(SOURCES)
+	avr-gcc $(LDFLAGS) -mmcu=$(MCU) -o $(TARGET).bin $(OBJECTS)
+	avr-objcopy -O ihex -R .eeprom $(TARGET).bin $(TARGET).hex
+	avrdude -F -V -c $(PROGRAMMER) -p $(MCU) $(PORT) $(BAUD) -U flash:w:$(TARGET).hex
+
+clean:
+	rm $(OBJECTS)
+	rm $(TARGET).bin
+	rm $(TARGET).hex
+
