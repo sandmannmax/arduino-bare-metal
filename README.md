@@ -1,5 +1,7 @@
 Packages to install:
+
 `brew install avrdude`
+
 `brew tap osx-cross/avr && brew install avr-gcc avr-binutils`
 
 Helpful ressources:
@@ -13,3 +15,5 @@ Helpful ressources:
 [Arduino Datasheet](https://docs.arduino.cc/resources/datasheets/A000066-datasheet.pdf)
 
 [AVR Libc](https://www.nongnu.org/avr-libc/user-manual/index.html)
+
+[DHT 11 Datasheet](https://www.mouser.com/datasheet/2/758/DHT11-Technical-Data-Sheet-Translated-Version-1143054.pdf)

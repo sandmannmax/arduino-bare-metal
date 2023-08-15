@@ -1,5 +1,24 @@
+TARGET=temp_humid
+MCU=atmega328p
+SOURCES=main.c
+SOURCES+=../serial/uart_hal.c
+
+PROGRAMMER=arduino
+PORT=-P/dev/tty.usbmodem213301
+BAUD=-b115200
+
+OBJECTS=$(SOURCES:.c=.o)
+CFLAGS=-c -Os -DF_CPU=16000000UL
+LDFLAGS=
+
 default:
-	avr-gcc -Os -DF_CPU=16000000UL -mmcu=atmega328p -c -o temp_humid.o temp_humid.c
-	avr-gcc -o temp_humid.bin temp_humid.o
-	avr-objcopy -O ihex -R .eeprom temp_humid.bin temp_humid.hex
-	avrdude -F -V -c arduino -p ATMEGA328P -P /dev/tty.usbmodem213301 -b 115200 -U flash:w:temp_humid.hex
+	avr-gcc $(CFLAGS) -mmcu=$(MCU) $(SOURCES)
+	avr-gcc $(LDFLAGS) -mmcu=$(MCU) -o $(TARGET).bin $(notdir $(OBJECTS))
+	avr-objcopy -O ihex -R .eeprom $(TARGET).bin $(TARGET).hex
+	avrdude -F -V -c $(PROGRAMMER) -p $(MCU) $(PORT) $(BAUD) -U flash:w:$(TARGET).hex
+
+clean:
+	rm $(notdir $(OBJECTS))
+	rm $(TARGET).bin
+	rm $(TARGET).hex
+
