@@ -17,3 +17,7 @@ Helpful ressources:
 [AVR Libc](https://www.nongnu.org/avr-libc/user-manual/index.html)
 
 [DHT 11 Datasheet](https://www.mouser.com/datasheet/2/758/DHT11-Technical-Data-Sheet-Translated-Version-1143054.pdf)
+
+[LCD Datasheet](https://circuitdigest.com/sites/default/files/HD44780U.pdf)
+
+[LCD Initialization](https://web.alfredstate.edu/faculty/weimandn/lcd/lcd_initialization/lcd_initialization_index.html)
