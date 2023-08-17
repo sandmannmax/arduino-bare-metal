@@ -33,13 +33,19 @@ void lcd_next_line() {
   _delay_ms(1);
 }
 
-void lcd_write(uint8_t n, uint8_t upper_case) {
+void lcd_write(uint8_t d) {
   PORTB |= (1 << PORTB4);
-  if (upper_case)
-    write_byte(0x41 + n);
-  else
-    write_byte(0x61 + n);
+  write_byte(d);
 }
+
+void lcd_write_letter(uint8_t n, uint8_t upper_case) {
+  if (upper_case)
+    lcd_write(0x41 + n);
+  else
+    lcd_write(0x61 + n);
+}
+
+void lcd_write_digit(uint8_t n) { lcd_write(0x30 + n); }
 
 void lcd_init() {
   DDRB |= (1 << DDB3) | (1 << DDB4);

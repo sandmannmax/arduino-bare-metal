@@ -9,33 +9,33 @@ int main(void) {
 
   while (1) {
 
-    lcd_write(7, 1);
-    lcd_write(4, 0);
-    lcd_write(11, 0);
-    lcd_write(11, 0);
-    lcd_write(14, 0);
+    lcd_write_letter(7, 1);
+    lcd_write_letter(4, 0);
+    lcd_write_letter(11, 0);
+    lcd_write_letter(11, 0);
+    lcd_write_letter(14, 0);
 
     lcd_next_line();
-    lcd_write(22, 1);
-    lcd_write(14, 0);
-    lcd_write(17, 0);
-    lcd_write(11, 0);
-    lcd_write(3, 0);
+    lcd_write_letter(22, 1);
+    lcd_write_letter(14, 0);
+    lcd_write_letter(17, 0);
+    lcd_write_letter(11, 0);
+    lcd_write_letter(3, 0);
 
     _delay_ms(2000);
     lcd_clear();
 
-    lcd_write(7, 1);
-    lcd_write(0, 0);
-    lcd_write(11, 0);
-    lcd_write(11, 0);
-    lcd_write(14, 0);
+    lcd_write_letter(7, 1);
+    lcd_write_letter(0, 0);
+    lcd_write_letter(11, 0);
+    lcd_write_letter(11, 0);
+    lcd_write_letter(14, 0);
 
     lcd_next_line();
-    lcd_write(22, 1);
-    lcd_write(4, 0);
-    lcd_write(11, 0);
-    lcd_write(19, 0);
+    lcd_write_letter(22, 1);
+    lcd_write_letter(4, 0);
+    lcd_write_letter(11, 0);
+    lcd_write_letter(19, 0);
 
     _delay_ms(2000);
     lcd_clear();
