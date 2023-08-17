@@ -1,51 +1,8 @@
+#include "../lcd/lcd.h"
 #include "../serial/uart_hal.h"
+#include "dht11.h"
 #include <avr/interrupt.h>
 #include <util/delay.h>
-
-void start_signal() {
-  DDRD |= (1 << DDD2);
-  PORTD &= ~(1 << PORTD2);
-  _delay_ms(20);
-  PORTD |= (1 << PORTD2);
-}
-
-void wait_for_high_pulse(uint32_t max_us) {
-  uint32_t max_cycles = max_us * (F_CPU / 1000000);
-  uint32_t cycles = 0;
-  while ((PIND & (1 << PIND2)) == 0 &&
-         cycles < max_cycles) // wait for high pulse
-    ++cycles;
-}
-
-void wait_for_low_pulse(uint32_t max_us) {
-  uint32_t max_cycles = max_us * (F_CPU / 1000000);
-  uint32_t cycles = 0;
-  while (PIND & (1 << PIND2) && cycles < max_cycles) // wait for low pulse
-    ++cycles;
-}
-
-void response_signal() {
-  DDRD &= ~(1 << DDD2);
-  wait_for_low_pulse(50);
-  wait_for_high_pulse(100);
-  wait_for_low_pulse(100);
-}
-
-uint8_t read_byte() {
-  uint8_t d = 0;
-
-  for (uint8_t i = 0; i < 8; ++i) {
-    wait_for_high_pulse(60);
-    _delay_us(50);
-    if (PIND & (1 << PIND2))
-      d = (d << 1) | 0x01;
-    else
-      d = d << 1;
-    wait_for_low_pulse(80);
-  }
-
-  return d;
-}
 
 uint8_t get_hex_ascii(uint8_t d) {
   if (d < 10)
@@ -80,8 +37,20 @@ void uart_send_byte_as_dec(uint8_t d) {
   uart_send_byte(get_hex_ascii(d0));
 }
 
+void lcd_show_byte_as_dec(uint8_t d) {
+  uint8_t d2 = (d % 1000) / 100;
+  uint8_t d1 = (d % 100) / 10;
+  uint8_t d0 = d % 10;
+
+  if (d2 > 0)
+    lcd_write_digit(d2);
+  lcd_write_digit(d1);
+  lcd_write_digit(d0);
+}
+
 int main(void) {
   uart_init(9600, 0);
+  lcd_init();
   sei();
 
   uint8_t t_i, t_f, h_i, h_f, cs, csc;
@@ -99,6 +68,32 @@ int main(void) {
     csc = h_i + h_f + t_i + t_f;
 
     if (csc - cs == 0) {
+      lcd_clear();
+      lcd_write_letter(19, 1); // T
+      lcd_write_letter(4, 0);  // e
+      lcd_write_letter(12, 0); // m
+      lcd_write_letter(15, 0); // p
+      lcd_write(0x3a);         // :
+      lcd_write(0x20);         // space
+      lcd_show_byte_as_dec(t_i);
+      lcd_write(0x2c); // ,
+      lcd_show_byte_as_dec(t_f * 10);
+      lcd_write(0xdf);        // °
+      lcd_write_letter(2, 1); // C
+
+      lcd_next_line();
+      lcd_write_letter(7, 1);  // H
+      lcd_write_letter(20, 0); // u
+      lcd_write_letter(12, 0); // m
+      lcd_write_letter(8, 0);  // i
+      lcd_write_letter(3, 0);  // d
+      lcd_write(0x3a);         // :
+      lcd_write(0x20);         // space
+      lcd_show_byte_as_dec(h_i);
+      lcd_write(0x2c); // ,
+      lcd_show_byte_as_dec(h_f * 10);
+      lcd_write(0x25); // %
+
       uart_send_string("Humidity: ");
       uart_send_byte_as_dec(h_i);
       uart_send_byte(',');
