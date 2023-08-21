@@ -1,6 +1,7 @@
 TARGET=audio
 MCU=atmega328p
 SOURCES=main.c
+SOURCES+=../analog/adc_hal.c
 SOURCES+=../serial/uart_hal.c
 
 PROGRAMMER=arduino
